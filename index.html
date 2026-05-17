@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Site no Kubernetes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f1117;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #1a1d2e;
+            border-bottom: 2px solid #2e75b6;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 24px;
+            color: #2e75b6;
+        }
+
+        .badge {
+            background: #2e75b6;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 20px 60px;
+        }
+
+        .hero h2 {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: #ffffff;
+        }
+
+        .hero h2 span {
+            color: #2e75b6;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #aaaaaa;
+            margin-bottom: 40px;
+        }
+
+        .status-bar {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1a1d2e;
+            border: 1px solid #2e75b6;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            color: #aaaaaa;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: #00cc66;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .cards {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            padding: 20px 40px 60px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: #1a1d2e;
+            border: 1px solid #2a2d3e;
+            border-radius: 12px;
+            padding: 28px 24px;
+            width: 220px;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+
+        .card:hover {
+            border-color: #2e75b6;
+        }
+
+        .card .icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .card h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .card p {
+            font-size: 13px;
+            color: #888888;
+            line-height: 1.5;
+        }
+
+        .infra {
+            background: #1a1d2e;
+            margin: 0 40px 60px;
+            border-radius: 12px;
+            padding: 32px;
+            border: 1px solid #2a2d3e;
+        }
+
+        .infra h3 {
+            font-size: 18px;
+            margin-bottom: 24px;
+            color: #2e75b6;
+            text-align: center;
+        }
+
+        .nodes {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .node {
+            background: #0f1117;
+            border: 1px solid #2a2d3e;
+            border-radius: 8px;
+            padding: 16px 20px;
+            text-align: center;
+            min-width: 160px;
+        }
+
+        .node.master { border-color: #2e75b6; }
+        .node.worker { border-color: #00cc66; }
+        .node.lb     { border-color: #f5a623; }
+
+        .node .role {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .node.master .role { color: #2e75b6; }
+        .node.worker .role { color: #00cc66; }
+        .node.lb .role     { color: #f5a623; }
+
+        .node .name {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .node .ip {
+            font-size: 12px;
+            color: #666666;
+            font-family: monospace;
+        }
+
+        .node .status {
+            margin-top: 8px;
+            font-size: 11px;
+            color: #00cc66;
+        }
+
+        footer {
+            text-align: center;
+            padding: 24px;
+            color: #444444;
+            font-size: 13px;
+            border-top: 1px solid #1a1d2e;
+        }
+
+        footer span {
+            color: #2e75b6;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🚀 K8s Lab</h1>
+    <span class="badge">v1.0.0</span>
+</header>
+
+<div class="hero">
+    <h2>Deployed no <span>Kubernetes</span></h2>
+    <p>Site a correr no cluster HA com 2 masters e 1 worker</p>
+    <div class="status-bar">
+        <div class="dot"></div>
+        Cluster operacional — todos os nós Ready
+    </div>
+</div>
+
+<div class="cards">
+    <div class="card">
+        <div class="icon">⚖️</div>
+        <h3>HAProxy</h3>
+        <p>Load Balancer a balancear tráfego na porta 6443</p>
+    </div>
+    <div class="card">
+        <div class="icon">🧠</div>
+        <h3>Control Plane</h3>
+        <p>2 masters em HA gerindo o estado do cluster</p>
+    </div>
+    <div class="card">
+        <div class="icon">⚙️</div>
+        <h3>Worker Node</h3>
+        <p>Pods a correr as aplicações em produção</p>
+    </div>
+    <div class="card">
+        <div class="icon">📊</div>
+        <h3>Monitoring</h3>
+        <p>Prometheus e Grafana a monitorizar tudo</p>
+    </div>
+    <div class="card">
+        <div class="icon">🔄</div>
+        <h3>Jenkins</h3>
+        <p>CI/CD a automatizar os deploys</p>
+    </div>
+</div>
+
+<div class="infra">
+    <h3>Infraestrutura do Cluster</h3>
+    <div class="nodes">
+        <div class="node lb">
+            <div class="role">Load Balancer</div>
+            <div class="name">haproxy</div>
+            <div class="ip">192.168.60.130</div>
+            <div class="status">● Running</div>
+        </div>
+        <div class="node master">
+            <div class="role">Control Plane</div>
+            <div class="name">master01</div>
+            <div class="ip">192.168.60.132</div>
+            <div class="status">● Ready</div>
+        </div>
+        <div class="node master">
+            <div class="role">Control Plane</div>
+            <div class="name">master02</div>
+            <div class="ip">192.168.60.129</div>
+            <div class="status">● Ready</div>
+        </div>
+        <div class="node worker">
+            <div class="role">Worker Node</div>
+            <div class="name">worker01</div>
+            <div class="ip">192.168.60.131</div>
+            <div class="status">● Ready</div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    Deployado via <span>Jenkins</span> no <span>Kubernetes v1.29</span> — RockyLinux 9
+</footer>
+
+</body>
+</html>
