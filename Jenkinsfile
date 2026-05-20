@@ -4,6 +4,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'A fazer checkout do codigo...'
+                checkout scm
             }
         }
         stage('Build') {
@@ -26,7 +27,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'A fazer deploy no Kubernetes...'
-                sh 'kubectl apply -f /home/gilberto/Desktop/meu-site/deployment.yaml'
+                sh '/var/jenkins_home/kubectl --kubeconfig=/var/jenkins_home/.kube/config apply -f ${WORKSPACE}/deployment.yaml'
             }
         }
     }
